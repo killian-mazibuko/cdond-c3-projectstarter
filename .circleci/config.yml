@@ -4,13 +4,15 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      workflow_id: 
+        type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
+            aws cloudformation delete-stack --stack-name="udapeople-frontend-<< pipeline.parameters.workflow_id >>"          
+            aws cloudformation delete-stack --stack-name="udapeople-backend-<< pipeline.parameters.workflow_id >>"
             exit 1
 
 #   revert-migrations:
@@ -20,7 +22,7 @@ commands:
 #     steps:
 #       - run:
 #           name: Revert migrations
-#           # Add when this will run
+#           # Add when this will run.
 #           command: |
 #             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
 #             SUCCESS = 1
@@ -162,7 +164,7 @@ jobs:
 
 #   configure-infrastructure:
 #     docker:
-#       # Docker image here that supports Ansible
+#       - image: python:3.7-alpine3.11
 #     steps:
 #       # Checkout code from git
 #       # Add ssh keys with fingerprint

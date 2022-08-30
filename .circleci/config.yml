@@ -290,11 +290,9 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
             
-            pwd
             npm install
+            npm audit fix --force
             npm run build
-            cd ..
-            pwd
             tar -C backend -czvf artifact.tar.gz
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml

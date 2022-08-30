@@ -194,7 +194,10 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-
+      - run:
+          name: Install Dependencies
+          command: |
+            yum install -y aws-cli              
       - run:
           name: Run migrations
           command: |

@@ -24,7 +24,8 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            $SUCCESS = curl https://kvdb.io/7hcXBv5HbNU8jWSratfS2n/migration_<<parameters.workflow_id>>
+            curl https://kvdb.io/7hcXBv5HbNU8jWSratfS2n/migration_<<parameters.workflow_id>>
+            SUCCESS = 1
             if (( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -290,12 +291,10 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
             
             pwd
-            ls-al
             npm install
             npm run build
             cd ..
             pwd
-            ls -al
             tar -C backend -czvf artifact.tar.gz
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml

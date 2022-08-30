@@ -152,12 +152,12 @@ jobs:
             aws ec2 describe-instances \
             --query "Reservations[*].Instances[*].PublicIpAddress" \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> ~/cdond-c3-projectstarter/circleci/ansible/inventory.txt
+            --output text >> ~/project/circleci/ansible/inventory.txt
             yum install -y tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
-            - cdond-c3-projectstarter/ansible/inventory.txt
+            - project/ansible/inventory.txt
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 

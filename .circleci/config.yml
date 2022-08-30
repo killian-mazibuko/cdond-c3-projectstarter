@@ -157,6 +157,7 @@ jobs:
             --query "Reservations[*].Instances[*].PublicIpAddress" \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .circleci
           paths:
@@ -189,22 +190,24 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-#   run-migrations:
-#     docker:
-#       # Docker image here that supports NodeJS
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Run migrations
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Send migration results to memstash
-#           command: |
-#             # Your code here
-#             exit 1
-#     # Here's where you will add some code to rollback on failure      
+  # run-migrations:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend-build]
+
+  #     - run:
+  #         name: Run migrations
+  #         command: |
+  #           cd backend
+  #           npm run migrations > migrations_dump.txt
+  #     - run:
+  #         name: Send migration results to memstash
+  #         command: |
+  #           # Your code here
+  #           exit 1
+    # Here's where you will add some code to rollback on failure      
 
 #   deploy-frontend:
 #     docker:
@@ -322,8 +325,8 @@ workflows:
               only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-#       - run-migrations:
-#           requires: [configure-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
 #       - deploy-frontend:
 #           requires: [run-migrations]
 #       - deploy-backend:

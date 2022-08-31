@@ -24,7 +24,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl https://kvdb.io/7hcXBv5HbNU8jWSratfS2n/migration_<<parameters.workflow_id>>)
+            curl https://kvdb.io/BxghKbhiQbhRpuZkScQDUJ/migration_<<parameters.workflow_id>>
             $SUCCESS=1
             echo $SUCCESS
             if [[ "$SUCCESS" -eq 1 ]]; then
@@ -213,7 +213,7 @@ jobs:
          command: |   
              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
              then
-                 curl https://kvdb.io/7hcXBv5HbNU8jWSratfS2n/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                 curl https://kvdb.io/BxghKbhiQbhRpuZkScQDUJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
              fi
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -296,6 +296,26 @@ jobs:
             tar -czvf artifact.tar.gz backend
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
+            BACKEND_IP=$(aws ec2 describe-instances \
+            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text)          
+            echo ${BACKEND_IP}
+            
+            export BACKEND=$(echo $BACKEND_IP | grep -o '[^ ]*$')
+            
+            export API_URL="http://${BACKEND}:3030"
+            echo "API_URL=${API_URL}"
+            
+            echo "Sleeping for 1 minute"
+            sleep 60
+            
+            if curl -v "${API_URL}/api/status" | grep "ok"
+            then
+              return 0
+            else
+              return 1
+            fi
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}

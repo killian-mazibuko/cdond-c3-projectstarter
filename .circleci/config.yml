@@ -314,12 +314,12 @@ jobs:
       - run:
           name: Get backend url and Backend smoke test
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances \
-            --query "Reservations[*].Instances[*].[PublicIpAddress]" \
+            export BACKEND_DNS=$(aws ec2 describe-instances \
+            --query "Reservations[*].Instances[*].[PublicDnsName]" \
             --output text)
-            echo ${BACKEND_IP}
+            echo ${BACKEND_DNS}
             
-            export BACKEND=$(echo $BACKEND_IP | grep -o '[^ ]*$')
+            export BACKEND=$(echo $BACKEND_DNS | grep -o '[^ ]*$')
             
             echo $BACKEND
             export API_URL="http://${BACKEND}:3030"

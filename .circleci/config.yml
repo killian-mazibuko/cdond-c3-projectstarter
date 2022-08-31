@@ -292,6 +292,7 @@ jobs:
             npm install
             npm run build
             echo "Passed 2"
+            cd ..
             tar -czvf artifact.tar.gz backend
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml

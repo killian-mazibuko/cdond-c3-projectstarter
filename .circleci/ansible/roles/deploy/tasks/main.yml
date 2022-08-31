@@ -49,6 +49,7 @@
   shell: |
     cd /home/ubuntu/backend_app_dir
     tar xzvf artifact.tar.gz
+    ls
     npm install
     npm run build
     pm2 stop all

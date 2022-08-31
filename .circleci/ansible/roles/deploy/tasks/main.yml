@@ -52,4 +52,4 @@
     npm install
     npm run build
     pm2 stop all
-    m start npm -- start
+    pm2 start npm -- start

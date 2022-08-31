@@ -26,7 +26,7 @@ commands:
           command: |
             SUCCESS=$(curl https://kvdb.io/7hcXBv5HbNU8jWSratfS2n/migration_<<parameters.workflow_id>>)
             echo $SUCCESS
-            if [ $SUCCESS=1 ]; then
+            if [[ "$SUCCESS" -eq 1 ]]; then
               cd ~/project/backend
               npm install
               npm run migrations:revert
@@ -292,7 +292,7 @@ jobs:
             npm install
             npm run build
             echo "Passed 2"
-            tar -C backend -czvf artifact.tar.gz
+            tar -czvf artifact.tar.gz backend
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
             echo "Completed"

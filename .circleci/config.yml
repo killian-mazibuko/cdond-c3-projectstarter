@@ -413,6 +413,7 @@ jobs:
           command: |
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
+              export OldWorkflowID=$(cat ~/project/OldWorkflowID.txt)
               echo "Deleting old stack"
               echo "s3://udapeople-${OldWorkflowID}"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive || true
